@@ -16,6 +16,10 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Delete existing packages
+        uses: actions/delete-package-versions@v3
+        with:
+          package-name: "edu.berkeley.cs61b.jh61b"
       - name: Publish to GitHub Packages
         run: mvn --batch-mode deploy
         env:
