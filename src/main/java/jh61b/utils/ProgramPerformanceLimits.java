@@ -1,4 +1,4 @@
-package jh61b.junit;
+package jh61b.utils;
 import java.util.HashMap;
 
 // The ProgramPerformanceLimits class was designed to simplify performance testing code by allowing
