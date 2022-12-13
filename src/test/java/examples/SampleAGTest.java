@@ -5,8 +5,8 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import jh61b.gradescope.GradedTest;
-import jh61b.gradescope.AutograderRunner;
+import jh61b.grader.GradedTest;
+import jh61b.grader.AutograderRunner;
 
 public class SampleAGTest {
     @org.junit.Test
@@ -36,14 +36,10 @@ public class SampleAGTest {
             .contains("mes");
     }
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     @GradedTest(name = "Truth Test 4", number = "4", max_score = 1)
     public void truthTest4() {
-        String string = "awesome";
-        assertThat(string).startsWith("awe");
-        assertWithMessage("Without me, it's just aweso")
-                .that(string)
-                .contains("mes");
+        assertThat(5).isLessThan(4);
     }
 
     public static void main(String[] args) {

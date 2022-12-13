@@ -1,7 +1,7 @@
 /**
  * Handy container class for storing test results.
  */
-package jh61b.gradescope;
+package jh61b.grader;
 
 import com.google.gson.JsonObject;
 

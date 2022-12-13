@@ -1,4 +1,4 @@
-package jh61b.gradescope;
+package jh61b.grader;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 

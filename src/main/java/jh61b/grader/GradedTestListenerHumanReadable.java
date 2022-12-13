@@ -2,7 +2,7 @@
 // Highly redundant with GradedTestListenerJSON. Maybe refactor later.
 // Also, should output go to StdErr? That's what Paul did.
 // TODO: Make stack traces less onerous. See textui.java for ideas of how we might do this.
-package jh61b.gradescope;
+package jh61b.grader;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
