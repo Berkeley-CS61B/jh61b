@@ -130,7 +130,7 @@ public class GradedTestListenerJSON implements TestExecutionListener {
             Throwable cause = testExecutionResult.getThrowable().orElse(null);
             currentTestResult.setScore(0);
             currentTestResult.addOutput("Test Failed!\n");
-            currentTestResult.addOutput("-".repeat(11));
+            currentTestResult.addOutput("-".repeat(12) + "\n");
             currentTestResult.addOutput(JUnitUtilities.throwableToString(cause));
         }
 
