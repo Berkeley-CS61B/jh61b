@@ -8,6 +8,7 @@ import java.util.stream.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SuppressWarnings("unchecked")
 public class Reflection {
     public static <T> T getFieldValue(Class clazz, String name, Object o) {
         T result = null;

@@ -66,8 +66,8 @@
                 <version>3.0.0-M7</version>
                 <configuration>
                     <excludes>
-                        <!-- This is just a demo of how to use it. -->
-                        <exclude>SampleAGTest.java</exclude>
+                        <!-- These are just demos. -->
+                        <exclude>examples/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
