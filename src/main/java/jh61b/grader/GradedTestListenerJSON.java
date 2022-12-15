@@ -111,8 +111,13 @@ public class GradedTestListenerJSON implements TestExecutionListener {
             return;
         }
 
+        String number = gradedTest.number();
+        if (testIdentifier.getUniqueIdObject().getLastSegment().getType().contains("invocation")) {
+            number += testIdentifier.getUniqueIdObject().getLastSegment().getValue();
+        }
+
         // Capture stdout so that we can relay it to the students.
-        currentTestResult = new TestResult(gradedTest.name(), gradedTest.number(), gradedTest.max_score(), gradedTest.suppress_output());
+        currentTestResult = new TestResult(gradedTest.name(), number, gradedTest.max_score(), gradedTest.suppress_output());
 
         // Full score unless there's an explicit failure
         currentTestResult.setScore(gradedTest.max_score());
@@ -125,24 +130,27 @@ public class GradedTestListenerJSON implements TestExecutionListener {
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         if (testIdentifier.isContainer()) return;
 
+        boolean failed = false;
         // Check if test failed
         if (testExecutionResult.getStatus() == TestExecutionResult.Status.FAILED) {
             Throwable cause = testExecutionResult.getThrowable().orElse(null);
             currentTestResult.setScore(0);
-            currentTestResult.addOutput("Test Failed!\n");
-            currentTestResult.addOutput("-".repeat(12) + "\n");
+            currentTestResult.addOutput("Test Failed!" + System.lineSeparator());
+            currentTestResult.addOutput("-".repeat(12) + System.lineSeparator());
             currentTestResult.addOutput(JUnitUtilities.throwableToString(cause));
+            failed = true;
         }
 
         if (capturedData.written()) {
+            if (failed) {
+                currentTestResult.addOutput(System.lineSeparator());
+            }
             currentTestResult.addOutput("Output:\n");
             currentTestResult.addOutput(capturedData.toString());
+            if (capturedData.truncated() && capturedData.getMaxSize() > 0) {
+                currentTestResult.addOutput("\n... truncated due to excessive output!");
+            }
         }
-
-        if (capturedData.truncated() && capturedData.getMaxSize() > 0) {
-            currentTestResult.addOutput("\n... truncated due to excessive output!");
-        }
-
         allTestResults.add(currentTestResult);
     }
 }

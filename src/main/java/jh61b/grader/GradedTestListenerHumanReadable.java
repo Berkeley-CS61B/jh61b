@@ -126,6 +126,10 @@ public class GradedTestListenerHumanReadable implements TestExecutionListener {
             String testNumber = getTestNumber(gradedTest);
             double testMaxScore = getTestMaxScore(gradedTest);
 
+            if (testIdentifier.getUniqueIdObject().getLastSegment().getType().contains("invocation")) {
+                testNumber += testIdentifier.getUniqueIdObject().getLastSegment().getValue();
+            }
+
             /* Capture StdOut (both ours and theirs) so that we can relay it to the students. */
             currentTestResult = new TestResult(testName, testNumber, testMaxScore);
 

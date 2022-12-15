@@ -33,7 +33,6 @@ public class JUnitUtilities {
                 break;
             }
         }
-        sb.append(System.lineSeparator());
         return sb.toString().replaceFirst("\\s+$", "");
     }
 

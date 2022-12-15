@@ -7,8 +7,10 @@ import static org.junit.Assert.assertTrue;
 
 import jh61b.grader.GradedTest;
 import jh61b.grader.AutograderRunner;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-public class SampleAGTest {
+public class SampleAGTest implements SampleInterface {
     @org.junit.Test
     @GradedTest(name = "Test", number = "1", max_score = 1)
     public void testMyTest() {
@@ -36,10 +38,17 @@ public class SampleAGTest {
             .contains("mes");
     }
 
-    @org.junit.jupiter.api.Test
-    @GradedTest(name = "Truth Test 4", number = "4", max_score = 1)
-    public void truthTest4() {
-        assertThat(5).isLessThan(4);
+    @ParameterizedTest
+    @CsvSource({
+            "apple,         1",
+            "banana,        2",
+            "'lemon, lime', 0xF1",
+            "strawberry,    700_000"
+    })
+    @GradedTest(name = "Parameterized Test", number = "p001", max_score = 1)
+    void testWithCsvSource(String fruit, int rank) {
+        assertThat(fruit).isNotNull();
+        assertThat(rank).isNotEqualTo(0);
     }
 
     public static void main(String[] args) {
