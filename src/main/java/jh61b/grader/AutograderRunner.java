@@ -41,11 +41,7 @@ public class AutograderRunner {
         }
     }
 
-    private void start(Class<?> testClass) {
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(testClass))
-                .build();
-
+    public void startWithLauncher(LauncherDiscoveryRequest request) {
         // JUnit engines are added and present by default
         LauncherConfig.Builder launcherConfigBuilder = LauncherConfig.builder();
         if (outputFormat == OutputFormat.JSON) {
@@ -62,6 +58,17 @@ public class AutograderRunner {
             Launcher launcher = session.getLauncher();
             launcher.execute(request);
         }
+    }
+
+    /**
+     * Simple test discovery by running all tests in provided class.
+     * @param testClass class containing tests to run
+     */
+    private void start(Class<?> testClass) {
+        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+                .selectors(selectClass(testClass))
+                .build();
+        startWithLauncher(request);
     }
 
     public static void run(String[] args) {

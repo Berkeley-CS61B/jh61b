@@ -16,7 +16,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface GradedTest {
-    String name() default "Unnamed test";
+    String DEFAULT_NAME = "UNNAMED_JH61B_TEST";
+    String name() default DEFAULT_NAME;
 
     String number() default "Unnumbered test";
 

@@ -79,6 +79,7 @@ public class GradedTestListenerJSON implements TestExecutionListener {
             tests.add(tr.toJSON());
         }
         json.add("tests", tests);
+        System.setOut(STDOUT);
 
         String pretty = (new GsonBuilder().setPrettyPrinting().create()).toJson(json);
         if (resultPath == null) {
@@ -98,9 +99,11 @@ public class GradedTestListenerJSON implements TestExecutionListener {
         TestSource testSource = testIdentifier.getSource().orElse(null);
         if (testSource == null) {
             STDERR.println("Warning: " + testIdentifier.getDisplayName() + " has no test source!");
+            currentTestResult = null;
             return;
         } else if (!(testSource instanceof MethodSource)) {
             STDERR.println("Warning: " + testIdentifier.getDisplayName() + " is not a method source!");
+            currentTestResult = null;
             return;
         }
 
@@ -108,7 +111,13 @@ public class GradedTestListenerJSON implements TestExecutionListener {
         GradedTest gradedTest = findAnnotation(testMethodSource, GradedTest.class).orElse(null);
         if (gradedTest == null) {
             STDERR.println("Warning: " + testIdentifier.getDisplayName() + " is missing @GradedTest annotation!");
+            currentTestResult = null;
             return;
+        }
+
+        String name = gradedTest.name();
+        if (name.equals(GradedTest.DEFAULT_NAME)) {
+            name = testIdentifier.getDisplayName();
         }
 
         String number = gradedTest.number();
@@ -116,12 +125,12 @@ public class GradedTestListenerJSON implements TestExecutionListener {
             number += testIdentifier.getUniqueIdObject().getLastSegment().getValue();
         }
 
-        // Capture stdout so that we can relay it to the students.
-        currentTestResult = new TestResult(gradedTest.name(), number, gradedTest.max_score(), gradedTest.suppress_output());
+        currentTestResult = new TestResult(name, number, gradedTest.max_score(), gradedTest.suppress_output());
 
         // Full score unless there's an explicit failure
         currentTestResult.setScore(gradedTest.max_score());
 
+        // Capture stdout so that we can relay it to the students.
         capturedData = new CappedByteArrayOutputStream(gradedTest.max_output_length());
         System.setOut(new PrintStream(capturedData));
     }
@@ -129,6 +138,7 @@ public class GradedTestListenerJSON implements TestExecutionListener {
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         if (testIdentifier.isContainer()) return;
+        if (currentTestResult == null) return;
 
         boolean failed = false;
         // Check if test failed
