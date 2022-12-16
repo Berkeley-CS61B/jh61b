@@ -140,7 +140,7 @@ public class GradedTestListenerHumanReadable implements TestExecutionListener {
             /* By default every test passes. */
             currentTestResult.setScore(testMaxScore);
 
-            String testSummary = String.format("test %s: %s (%s)", testNumber, testName, testIdentifier.getDisplayName());
+            String testSummary = String.format("test %s: %s", testNumber, testName);
             System.out.println("Starting " + testSummary);
 
             maxScore += testMaxScore;
