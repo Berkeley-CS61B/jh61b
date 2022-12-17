@@ -122,7 +122,12 @@ public class GradedTestListenerJSON implements TestExecutionListener {
 
         String number = gradedTest.number();
         if (testIdentifier.getUniqueIdObject().getLastSegment().getType().contains("invocation")) {
-            number += testIdentifier.getUniqueIdObject().getLastSegment().getValue();
+            // Ugly hack to get around Gradescope's string ordering
+            String invocation = testIdentifier.getUniqueIdObject().getLastSegment().getValue();
+            if (invocation.startsWith("#") && invocation.length() == 2) {
+                invocation = "#0" + invocation.substring(1);
+            }
+            number += invocation;
         }
 
         currentTestResult = new TestResult(name, number, gradedTest.max_score(), gradedTest.suppress_output());
