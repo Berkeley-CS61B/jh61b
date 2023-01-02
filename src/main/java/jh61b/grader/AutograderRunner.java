@@ -2,12 +2,14 @@ package jh61b.grader;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
-
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSession;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -20,8 +22,10 @@ public class AutograderRunner {
 
     private OutputFormat outputFormat = OutputFormat.PLAINTEXT;
     private String outfile = null;
+    private List<String> tags;
 
     public AutograderRunner(String[] args) {
+        tags = new ArrayList<String>();
         parseArgs(args);
     }
 
@@ -37,6 +41,8 @@ public class AutograderRunner {
                 case "--outfile":
                     outfile = args[++i];
                     break;
+                case "--tag-expr":
+                    tags.add(args[++i]);
             }
         }
     }
@@ -65,10 +71,12 @@ public class AutograderRunner {
      * @param testClass class containing tests to run
      */
     private void start(Class<?> testClass) {
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(testClass))
-                .build();
-        startWithLauncher(request);
+        LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request()
+            .selectors(selectClass(testClass));
+        if (!tags.isEmpty()) {
+            builder.filters(TagFilter.includeTags(tags));
+        }
+        startWithLauncher(builder.build());
     }
 
     public static void run(String[] args) {
@@ -94,7 +102,6 @@ public class AutograderRunner {
      *
      * @author Eli Lipsitz
      */
-    @SuppressWarnings("removal")
     public static void run(String[] args, int calls) {
         AutograderRunner runner = new AutograderRunner(args);
         // Find the class the appropriate distance up the callstack.
