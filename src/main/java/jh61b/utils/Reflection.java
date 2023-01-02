@@ -112,11 +112,11 @@ public class Reflection {
     }
 
     public static Predicate<Field> hasType(Class clazz) {
-        return (Field f) -> f.getType().equals(clazz);
+        return (Field f) -> clazz.isAssignableFrom(f.getType());
     }
 
     public static Predicate<Field> doesNotHaveType(Class clazz) {
-        return (Field f) -> !f.getType().equals(clazz);
+        return (Field f) -> !clazz.isAssignableFrom(f.getType());
     }
 
     public static void assertFieldsLessThan(Class clazz, Class FieldType, int x) {
