@@ -21,7 +21,7 @@ public class AutograderRunner {
     private OutputFormat outputFormat = OutputFormat.PLAINTEXT;
     private String outfile = null;
 
-    private AutograderRunner(String[] args) {
+    public AutograderRunner(String[] args) {
         parseArgs(args);
     }
 
