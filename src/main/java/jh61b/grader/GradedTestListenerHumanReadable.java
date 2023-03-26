@@ -152,6 +152,16 @@ public class GradedTestListenerHumanReadable implements TestExecutionListener {
 
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+        if (testIdentifier.isContainer()) {
+            if (testExecutionResult.getThrowable().isEmpty()) {
+                return;
+            }
+            Throwable cause = testExecutionResult.getThrowable().get();
+            System.out.println("Test Container Failed!");
+            System.out.println(JUnitUtilities.throwableToString(cause));
+            return;
+        }
+
         GradedTest gradedTest = getGradedTestMethod(testIdentifier);
         if (gradedTest == null) {
             return;
@@ -163,7 +173,7 @@ public class GradedTestListenerHumanReadable implements TestExecutionListener {
                 currentTestResult.setScore(0);
                 System.out.println("Test Failed!");
                 if (cause != null) {
-                    cause.printStackTrace(System.out);
+                    System.out.println(JUnitUtilities.throwableToString(cause));
                 }
                 totalScore += getTestMaxScore(gradedTest);
             } else {

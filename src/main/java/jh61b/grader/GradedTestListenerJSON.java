@@ -94,7 +94,10 @@ public class GradedTestListenerJSON implements TestExecutionListener {
     }
 
     public void executionStarted(TestIdentifier testIdentifier) {
-        if (testIdentifier.isContainer()) return;
+        if (testIdentifier.isContainer()) {
+            currentTestResult = null;
+            return;
+        }
 
         TestSource testSource = testIdentifier.getSource().orElse(null);
         if (testSource == null) {
@@ -142,7 +145,13 @@ public class GradedTestListenerJSON implements TestExecutionListener {
 
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-        if (testIdentifier.isContainer()) return;
+        if (testIdentifier.isContainer()) {
+            if (testExecutionResult.getThrowable().isEmpty()) {
+                return;
+            }
+            currentTestResult = new TestResult("Test Container", "-", 0, false);
+        }
+
         if (currentTestResult == null) return;
 
         boolean failed = false;
@@ -156,7 +165,7 @@ public class GradedTestListenerJSON implements TestExecutionListener {
             failed = true;
         }
 
-        if (capturedData.written()) {
+        if (capturedData != null && capturedData.written()) {
             if (failed) {
                 currentTestResult.addOutput(System.lineSeparator());
             }
