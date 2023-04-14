@@ -73,7 +73,7 @@ public class JUnitUtilities {
             Class<?> cls = Class.forName(frame.getClassName());
             Method mthd = cls.getMethod(frame.getMethodName());
             return mthd.getAnnotation(org.junit.Test.class) != null || mthd.getAnnotation(org.junit.jupiter.api.Test.class) != null;
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | NoClassDefFoundError e) {
             return false;
         }
     }
