@@ -175,9 +175,9 @@ public class GradedTestListenerHumanReadable implements TestExecutionListener {
                 if (cause != null) {
                     System.out.println(JUnitUtilities.throwableToString(cause));
                 }
-                totalScore += getTestMaxScore(gradedTest);
-            } else {
                 testsFailed++;
+            } else {
+                totalScore += getTestMaxScore(gradedTest);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
